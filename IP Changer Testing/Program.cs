@@ -14,13 +14,15 @@ namespace IP_Changer_Testing
         {
             //Console.WriteLine("Hello World!");
 
-            //DisplayDnsConfiguration();
+            DisplayDnsConfiguration();
+
+
 
             for (int i = 0; i < 10; i++)
             {
                 Console.Write("Enter an IP: ");
                 string ip = Console.ReadLine();
-                if (CheckIPAddress(ip))
+                if (CheckIPAddressv4(ip))
                 {
                     Console.WriteLine("Congrats! {0} Is Valid!", ip);
                 } else
@@ -36,7 +38,7 @@ namespace IP_Changer_Testing
             
         }
 
-        static bool CheckIPAddress(string ipString)
+        static bool CheckIPAddressv4(string ipString)
         {
             // Nothing was passed
             if (String.IsNullOrWhiteSpace(ipString))
@@ -83,9 +85,10 @@ namespace IP_Changer_Testing
             NetworkInterface[] adapters = NetworkInterface.GetAllNetworkInterfaces();
             foreach (NetworkInterface adapter in adapters)
             {
+                // For testing, only bother with up interfaces
                 if (adapter.OperationalStatus.ToString() == "Up")
                 {
-
+                    
                     Console.WriteLine("Adapter Name ..........: {0}", adapter.Name);
                     Console.WriteLine("Adapter Description ...: {0}", adapter.Description);
                     Console.WriteLine("Adapter Status ........: {0}", adapter.OperationalStatus);
@@ -116,7 +119,7 @@ namespace IP_Changer_Testing
                     }
                     for (int i = 0; i < ip.WinsServersAddresses.Count; i++)
                     {
-                        Console.WriteLine("    Gateway Address ...: {0}", ip.WinsServersAddresses[i]);
+                        Console.WriteLine("    WINS Address ......: {0}", ip.WinsServersAddresses[i]);
                     }
 
                     IPv4InterfaceProperties ipv4 = ip.GetIPv4Properties();
@@ -129,6 +132,28 @@ namespace IP_Changer_Testing
                     IPv6InterfaceProperties ipv6 = ip.GetIPv6Properties();
                     Console.WriteLine("    v6 DHCP ...........: {0}", ipv6.Index);
                     Console.WriteLine("    v6 MTU ............: {0}", ipv6.Mtu);
+
+
+
+                    foreach (UnicastIPAddressInformation ipUni in ip.UnicastAddresses)
+                    {
+
+                        // We only care about IPv4, v6 is InterNetworkV6
+                        if (ipUni.Address.AddressFamily.ToString() == "InterNetwork")
+                        {
+                            Console.WriteLine("    IP Address ........: {0}", ipUni.Address);
+                            Console.WriteLine("        Netmask .........: {0}", ipUni.IPv4Mask);
+                            Console.WriteLine("        CIDR ............: {0}", ipUni.PrefixLength);
+                            Console.WriteLine("        PrefixOrigin ....: {0}", ipUni.PrefixOrigin);
+                            Console.WriteLine("        SuffixOrigin ....: {0}", ipUni.SuffixOrigin);
+
+                        }
+
+
+
+
+
+                    }
 
                     /**
                     IPInterfaceProperties properties = adapter.GetIPProperties();
