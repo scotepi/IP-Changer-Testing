@@ -122,11 +122,15 @@ namespace IP_Changer_Testing
                         Console.WriteLine("    WINS Address ......: {0}", ip.WinsServersAddresses[i]);
                     }
 
-                    IPv4InterfaceProperties ipv4 = ip.GetIPv4Properties();
-                    Console.WriteLine("    v4 DHCP ...........: {0}", ipv4.IsDhcpEnabled);
-                    Console.WriteLine("    v4 Forwarding .....: {0}", ipv4.IsForwardingEnabled);
-                    Console.WriteLine("    v4 AutoIP Active ..: {0}", ipv4.IsAutomaticPrivateAddressingActive);
-                    Console.WriteLine("    v4 MTU.............: {0}", ipv4.Mtu);
+                    try
+                    {
+                        IPv4InterfaceProperties ipv4 = ip.GetIPv4Properties();
+                        Console.WriteLine("    v4 DHCP ...........: {0}", ipv4.IsDhcpEnabled);
+                        Console.WriteLine("    v4 Forwarding .....: {0}", ipv4.IsForwardingEnabled);
+                        Console.WriteLine("    v4 AutoIP Active ..: {0}", ipv4.IsAutomaticPrivateAddressingActive);
+                        Console.WriteLine("    v4 MTU.............: {0}", ipv4.Mtu);
+                    }
+                    catch { }
 
 
                     IPv6InterfaceProperties ipv6 = ip.GetIPv6Properties();
